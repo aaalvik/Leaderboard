@@ -22,7 +22,9 @@ main =
 
 
 type alias Score =
-    ( String, Float )
+    { name : String
+    , val : Float
+    }
 
 
 type alias Model =
@@ -46,7 +48,6 @@ model =
 
 type Msg
     = NoOp
-    | UpdateScore
     | KeyDownName Int
     | UpdateNameInput String
     | UpdateScoreInput String
@@ -58,11 +59,11 @@ update msg model =
         NoOp ->
             model
 
-        UpdateScore ->
-            updateScores model
-
-        KeyDownName _ ->
-            model
+        KeyDownName key ->
+            if key == 13 then
+                updateScores model
+            else
+                model
 
         UpdateNameInput newName ->
             { model | name = newName }
@@ -78,10 +79,10 @@ updateScores model =
             Result.withDefault 0 (String.toFloat model.score)
 
         score =
-            ( model.name, scoreVal )
+            { name = model.name, val = scoreVal }
 
         newScores =
-            List.sort <| score :: model.scores
+            List.sortBy .val <| score :: model.scores
     in
     { model | scores = newScores }
 
@@ -96,13 +97,13 @@ view : Model -> Html Msg
 view model =
     div [ class "container", style [ ( "margin-top", "30px" ), ( "text-align", "center" ) ] ]
         [ -- inline CSS (literal)
-          div [ class "scores" ]
-            [ showScores model, inputFieldName, inputFieldScore, viewButton ]
+          div [ class "page" ]
+            [ h1 [ class "header" ] [ text "Topp 5 - LM i ølsykkel" ]
+            , showScores model
+            , inputFieldName
+            , inputFieldScore
+            ]
         ]
-
-
-viewButton =
-    button [ class "button btn", onClick UpdateScore ] [ text "Legg til" ]
 
 
 inputFieldName : Html Msg
@@ -120,7 +121,7 @@ inputFieldScore : Html Msg
 inputFieldScore =
     input
         [ class "input"
-        , placeholder "Score"
+        , placeholder "Tid i sekunder"
         , onInput UpdateScoreInput
         , onKeyDown KeyDownName
         ]
@@ -135,14 +136,14 @@ onKeyDown tagger =
 showScores : Model -> Html Msg
 showScores model =
     let
-        top10 =
-            List.take 10 model.scores
+        top5 =
+            List.take 5 (List.sortBy .val model.scores)
 
         makeScore name time =
-            div [ class "score" ] [ div [] [ text name ], div [] [ text (toString time) ] ]
+            div [ class "score" ] [ div [ class "score-item" ] [ h1 [] [ text name ] ], div [ class "score-item" ] [ h1 [] [ text <| toString time ] ] ]
 
         scores =
-            List.map (\( name, score ) -> makeScore name score) top10
+            List.map (\{ name, val } -> makeScore name val) top5
     in
     div [ class "scores" ] scores
 

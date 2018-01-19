@@ -3,3 +3,31 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
 // can add Boostrap overrides, additional Sass/CSS below...
+
+
+.scores {
+    display: flex;
+    align-items: center;
+    height: 400px;
+    flex-direction: column;
+}
+
+.input {
+    height: 40px;
+    padding: 2rem;
+}
+
+.score {
+    display: flex; 
+    justify-content: center;
+    flex-direction: row;
+    width: 800px;
+}
+
+.score-item {
+    width: 50%;
+}
+
+.header {
+    padding-bottom: 3rem;
+}
