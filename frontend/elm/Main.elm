@@ -2,7 +2,6 @@ module Main exposing (..)
 
 -- component import example
 
-import Components.Hello exposing (hello)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -21,14 +20,14 @@ main =
 -- MODEL
 
 
-type alias Score =
+type alias Result =
     { name : String
-    , val : Float
+    , score : Float
     }
 
 
 type alias Model =
-    { scores : List Score
+    { results : List Result
     , name : String
     , score : String
     }
@@ -36,7 +35,7 @@ type alias Model =
 
 model : Model
 model =
-    { scores = []
+    { results = []
     , name = ""
     , score = ""
     }
@@ -47,7 +46,7 @@ model =
 
 
 type Msg
-    = NoOp
+    = NoOp Int
     | KeyDownName Int
     | UpdateNameInput String
     | UpdateScoreInput String
@@ -56,12 +55,12 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        NoOp ->
+        NoOp _ ->
             model
 
         KeyDownName key ->
             if key == 13 then
-                updateScores model
+                updateResults model
             else
                 model
 
@@ -72,19 +71,19 @@ update msg model =
             { model | score = newScore }
 
 
-updateScores : Model -> Model
-updateScores model =
+updateResults : Model -> Model
+updateResults model =
     let
-        scoreVal =
+        score =
             Result.withDefault 0 (String.toFloat model.score)
 
-        score =
-            { name = model.name, val = scoreVal }
+        result =
+            { name = model.name, score = score }
 
-        newScores =
-            List.sortBy .val <| score :: model.scores
+        newResults =
+            List.sortBy .score <| result :: model.results
     in
-    { model | scores = newScores }
+    { model | results = newResults }
 
 
 
@@ -99,7 +98,7 @@ view model =
         [ -- inline CSS (literal)
           div [ class "page" ]
             [ h1 [ class "header" ] [ text "Topp 5 - LM i ølsykkel" ]
-            , showScores model
+            , showResults 5 model
             , inputFieldName
             , inputFieldScore
             ]
@@ -123,7 +122,6 @@ inputFieldScore =
         [ class "input"
         , placeholder "Tid i sekunder"
         , onInput UpdateScoreInput
-        , onKeyDown KeyDownName
         ]
         []
 
@@ -133,19 +131,19 @@ onKeyDown tagger =
     on "keydown" (Json.map tagger keyCode)
 
 
-showScores : Model -> Html Msg
-showScores model =
+showResults : Int -> Model -> Html Msg
+showResults num model =
     let
         top5 =
-            List.take 5 (List.sortBy .val model.scores)
+            List.take num (List.sortBy .score model.results)
 
         makeScore name time =
-            div [ class "score" ] [ div [ class "score-item" ] [ h1 [] [ text name ] ], div [ class "score-item" ] [ h1 [] [ text <| toString time ] ] ]
+            div [ class "result" ] [ div [ class "result-item" ] [ h1 [] [ text name ] ], div [ class "result-item" ] [ h1 [] [ text <| toString time ] ] ]
 
         scores =
-            List.map (\{ name, val } -> makeScore name val) top5
+            List.map (\{ name, score } -> makeScore name score) top5
     in
-    div [ class "scores" ] scores
+    div [ class "results" ] scores
 
 
 

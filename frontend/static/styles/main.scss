@@ -5,7 +5,7 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 // can add Boostrap overrides, additional Sass/CSS below...
 
 
-.scores {
+.results {
     display: flex;
     align-items: center;
     height: 400px;
@@ -17,14 +17,14 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
     padding: 2rem;
 }
 
-.score {
+.result {
     display: flex; 
     justify-content: center;
     flex-direction: row;
     width: 800px;
 }
 
-.score-item {
+.result-item {
     width: 50%;
 }
 
