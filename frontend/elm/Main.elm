@@ -9,11 +9,11 @@ import Json.Decode as Json
 
 
 -- APP
+--main : Program Never Model Msg
 
 
-main : Program Never Model Msg
 main =
-    Html.beginnerProgram { model = model, view = view, update = update }
+    Html.program { init = init, view = view, update = update, subscriptions = subscriptions }
 
 
 
@@ -33,12 +33,14 @@ type alias Model =
     }
 
 
-model : Model
-model =
-    { results = []
-    , name = ""
-    , score = ""
-    }
+init : ( Model, Cmd Msg )
+init =
+    ( { results = []
+      , name = ""
+      , score = ""
+      }
+    , Cmd.none
+    )
 
 
 
@@ -52,23 +54,31 @@ type Msg
     | UpdateScoreInput String
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NoOp _ ->
-            model
+            ( model, Cmd.none )
 
         KeyDownName key ->
             if key == 13 then
-                updateResults model
+                ( updateResults model, Cmd.none )
             else
-                model
+                ( model, Cmd.none )
 
         UpdateNameInput newName ->
-            { model | name = newName }
+            let
+                newModel =
+                    { model | name = newName }
+            in
+            ( newModel, Cmd.none )
 
         UpdateScoreInput newScore ->
-            { model | score = newScore }
+            let
+                newModel =
+                    { model | score = newScore }
+            in
+            ( newModel, Cmd.none )
 
 
 updateResults : Model -> Model
@@ -84,6 +94,15 @@ updateResults model =
             List.sortBy .score <| result :: model.results
     in
     { model | results = newResults }
+
+
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
 
 
 
