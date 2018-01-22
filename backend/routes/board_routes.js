@@ -1,6 +1,7 @@
 var ObjectID = require('mongodb').ObjectID;
 
 module.exports = function (app, db) {
+    // Get one result with given id
     app.get('/results/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
@@ -13,6 +14,18 @@ module.exports = function (app, db) {
         });
     });
 
+    // Get all saved results
+    app.get('/results', (req, res) => {
+        db.collection('results').find({}).toArray((err, item) => {
+            if (err) {
+                res.send({ 'error': 'An error has occurred' });
+            } else {
+                res.send(item);
+            };
+        });
+    });
+
+    // Delete result with given id
     app.delete('/results/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
@@ -25,6 +38,7 @@ module.exports = function (app, db) {
         });
     })
 
+    // Change result with given id
     app.put('/results/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
@@ -38,6 +52,7 @@ module.exports = function (app, db) {
         });
     });
 
+    // Insert new result
     app.post('/results', (req, res) => {
         const result = { name: req.body.name, score: req.body.score };
         db.collection('results').insert(result, (err, result) => {
