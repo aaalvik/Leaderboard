@@ -13,7 +13,7 @@ view model =
     div [ class "container", style [ ( "margin-top", "30px" ), ( "text-align", "center" ) ] ]
         [ div [ class "page" ]
             [ h1 [ class "header" ] [ text "Topp 5 - LM i ølsykkel" ]
-            , showResults 5 model
+            , showScores 5 model
             , inputFieldName
             , inputFieldScore
             ]
@@ -46,16 +46,16 @@ onKeyDown tagger =
     on "keydown" (Json.map tagger keyCode)
 
 
-showResults : Int -> Model -> Html Msg
-showResults num model =
+showScores : Int -> Model -> Html Msg
+showScores num model =
     let
         top5 =
-            List.take num (List.sortBy .score model.results)
+            List.take num (List.sortBy .score model.scores)
 
         makeScore name time =
-            div [ class "result" ] [ div [ class "result-item" ] [ h1 [] [ text name ] ], div [ class "result-item" ] [ h1 [] [ text <| toString time ] ] ]
+            div [ class "scores" ] [ div [ class "score-item" ] [ h1 [] [ text name ] ], div [ class "score-item" ] [ h1 [] [ text <| toString time ] ] ]
 
         scores =
             List.map (\{ name, score } -> makeScore name score) top5
     in
-    div [ class "results" ] scores
+    div [ class "scores" ] scores

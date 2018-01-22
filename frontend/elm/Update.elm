@@ -1,6 +1,7 @@
 module Update exposing (..)
 
-import Model exposing (Model)
+import Http
+import Model exposing (Model, Scores)
 
 
 type Msg
@@ -8,6 +9,7 @@ type Msg
     | KeyDownName Int
     | UpdateNameInput String
     | UpdateScoreInput String
+    | ReceivedScores (Result Http.Error Scores)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -18,7 +20,7 @@ update msg model =
 
         KeyDownName key ->
             if key == 13 then
-                ( updateResults model, Cmd.none )
+                ( updateScores model, Cmd.none )
             else
                 ( model, Cmd.none )
 
@@ -36,20 +38,23 @@ update msg model =
             in
             ( newModel, Cmd.none )
 
+        ReceivedScores scores ->
+            ( model, Cmd.none )
 
-updateResults : Model -> Model
-updateResults model =
+
+updateScores : Model -> Model
+updateScores model =
     let
         score =
             Result.withDefault 0 (String.toFloat model.score)
 
-        result =
+        scoreItem =
             { name = model.name, score = score }
 
-        newResults =
-            List.sortBy .score <| result :: model.results
+        newScores =
+            List.sortBy .score <| scoreItem :: model.scores
     in
-    { model | results = newResults }
+    { model | scores = newScores }
 
 
 

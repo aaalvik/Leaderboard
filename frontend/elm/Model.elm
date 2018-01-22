@@ -1,14 +1,18 @@
 module Model exposing (..)
 
 
-type alias Result =
+type alias ScoreItem =
     { name : String
     , score : Float
     }
 
 
+type alias Scores =
+    List ScoreItem
+
+
 type alias Model =
-    { results : List Result
+    { scores : Scores
     , name : String
     , score : String
     }

@@ -1,11 +1,11 @@
 var ObjectID = require('mongodb').ObjectID;
 
 module.exports = function (app, db) {
-    // Get one result with given id
-    app.get('/results/:id', (req, res) => {
+    // Get one score item with given id
+    app.get('/scores/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
-        db.collection('results').findOne(details, (err, item) => {
+        db.collection('scores').findOne(details, (err, item) => {
             if (err) {
                 res.send({ 'error': 'An error has occurred' });
             } else {
@@ -14,9 +14,9 @@ module.exports = function (app, db) {
         });
     });
 
-    // Get all saved results
-    app.get('/results', (req, res) => {
-        db.collection('results').find({}).toArray((err, item) => {
+    // Get all saved scores
+    app.get('/scores', (req, res) => {
+        db.collection('scores').find({}).toArray((err, item) => {
             if (err) {
                 res.send({ 'error': 'An error has occurred' });
             } else {
@@ -25,41 +25,42 @@ module.exports = function (app, db) {
         });
     });
 
-    // Delete result with given id
-    app.delete('/results/:id', (req, res) => {
+    // Delete scoreItem with given id
+    app.delete('/scores/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
-        db.collection('results').remove(details, (err, item) => {
+        db.collection('scores').remove(details, (err, item) => {
             if (err) {
                 res.send({ 'error': 'An error has occurred' });
             } else {
-                res.send('Note ' + id + ' deleted!');
+                res.send('Score item ' + id + ' deleted!');
             }
         });
     })
 
-    // Change result with given id
-    app.put('/results/:id', (req, res) => {
+    // Change score item with given id
+    app.put('/scores/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
-        const newResult = { name: req.body.name, score: req.body.score };
-        db.collection('results').update(details, newResult, (err, result) => {
+        const newScore = { name: req.body.name, score: req.body.score };
+
+        db.collection('scores').update(details, newScore, (err, item) => {
             if (err) {
                 res.send({ 'error': 'An error has occurred' });
             } else {
-                res.send(newResult);
+                res.send(newScore);
             }
         });
     });
 
-    // Insert new result
-    app.post('/results', (req, res) => {
-        const result = { name: req.body.name, score: req.body.score };
-        db.collection('results').insert(result, (err, result) => {
+    // Insert new score item
+    app.post('/scores', (req, res) => {
+        const scoreItem = { name: req.body.name, score: req.body.score };
+        db.collection('scores').insert(scoreItem, (err, item) => {
             if (err) {
                 res.send({ 'error': 'An error has occurred' });
             } else {
-                res.send(result.ops[0]);
+                res.send(item.ops[0]);
             }
         });
     });
