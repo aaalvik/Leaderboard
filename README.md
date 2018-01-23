@@ -10,6 +10,7 @@ You can choose how many positions to display, what unit the scores are in, and w
 ### Install:
 1. Install elm (https://guide.elm-lang.org/install.html)
 2. Install node (https://nodejs.org/en/download/)
+3. Run ```npm install```
 
 ### Run: 
 1. Start the elm app:
