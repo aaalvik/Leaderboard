@@ -1,6 +1,10 @@
 module Model exposing (..)
 
 
+type alias ScoreId =
+    String
+
+
 type alias ScoreItem =
     { name : String
     , score : Float
@@ -16,8 +20,3 @@ type alias Model =
     , name : String
     , score : String
     }
-
-
-init : ( Model, Cmd msg )
-init =
-    ( Model [] "" "", Cmd.none )

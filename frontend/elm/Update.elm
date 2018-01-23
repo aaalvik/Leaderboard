@@ -38,8 +38,14 @@ update msg model =
             in
             ( newModel, Cmd.none )
 
-        ReceivedScores scores ->
-            ( model, Cmd.none )
+        ReceivedScores result ->
+            case result of
+                Ok scores ->
+                    ( { model | scores = scores }, Cmd.none )
+
+                Err err ->
+                    ( model, Cmd.none )
+                        |> Debug.log ("Tried to retreive scores from db, failed: " ++ toString err)
 
 
 updateScores : Model -> Model

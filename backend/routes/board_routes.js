@@ -1,6 +1,8 @@
 var ObjectID = require('mongodb').ObjectID;
 
 module.exports = function (app, db) {
+
+
     // Get one score item with given id
     app.get('/scores/:id', (req, res) => {
         const id = req.params.id;
@@ -20,7 +22,7 @@ module.exports = function (app, db) {
             if (err) {
                 res.send({ 'error': 'An error has occurred' });
             } else {
-                res.send(item);
+                res.json(item);
             };
         });
     });
